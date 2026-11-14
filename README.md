@@ -265,7 +265,9 @@ de la implementacion. Agregar un endpoint es agregar una funcion.
 npm test
 ```
 
-24 tests con `node:test` + `supertest`. Cubren:
+31 tests en dos suites con `node:test`.
+
+**`test/api.test.js`** (24) — backend con `supertest`:
 
 - evaluador de expresiones (precedencia, potencias, funciones, entrada peligrosa)
 - Morse en ambas direcciones
@@ -275,6 +277,23 @@ npm test
 - sobres de error: `400`, `404`, `503`
 - que `/nsfw` sirva la web mientras sus endpoints siguen bloqueados
 - **barrido de las 102 rutas registradas**: ninguna devuelve `404` ni `500`
+
+**`test/frontend.test.js`** (7) — frontend con `jsdom`, cargando el `index.html` y el
+`app.js` reales contra un servidor Express real:
+
+- el modal de +18 empieza oculto
+- el interruptor lo abre
+- **"Tengo 18+, activar" lo cierra y activa NSFW** (el boton que no funcionaba)
+- "Cancelar" lo cierra sin activar nada
+- `Escape` lo cierra
+- con la preferencia guardada, el interruptor apaga directamente
+- regression del CSS: `.gate { display: none }` + `.gate.is-open { display: grid }`
+
+> **Por que el test del CSS importa:** jsdom no aplica la cascada de especificidad, asi que
+> los tests de DOM por si solos no habrian detectado el fallo original. El modal se ocultaba
+> con el atributo `hidden`, pero una regla de autor (`display: grid`) gana siempre sobre el
+> `[hidden] { display: none }` del user-agent stylesheet, sin importar especificidad. Por eso
+> el modal tapaba la pagina desde la carga y los botones parecian no hacer nada.
 
 > Los endpoints que llaman a proveedores externos devuelven `502 UPSTREAM_ERROR` cuando se
 > ejecutan sin salida a internet. Eso es lo esperado; lo que el barrido garantiza es que la
