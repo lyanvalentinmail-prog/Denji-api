@@ -229,9 +229,7 @@ function renderCategory(category) {
 
 function renderLocked(category) {
   const activate = h('button', { class: 'btn btn--danger', type: 'button', text: 'activar +18' });
-  activate.addEventListener('click', () => {
-    gate.hidden = false;
-  });
+  activate.addEventListener('click', openGate);
   app.replaceChildren(
     h('div', { class: 'page-head' }, [
       h('h1', { text: `${category.icon ?? '🔞'} ${category.name}` }),
@@ -269,19 +267,32 @@ function setNsfw(value) {
   loadCatalog();
 }
 
+function openGate() {
+  gate.classList.add('is-open');
+  gate.querySelector('[data-gate="confirm"]')?.focus();
+}
+
+function closeGate() {
+  gate.classList.remove('is-open');
+}
+
 toggle.addEventListener('click', () => {
   if (state.nsfw) return setNsfw(false);
-  gate.hidden = false;
+  openGate();
 });
 
 gate.addEventListener('click', (event) => {
-  const action = event.target.getAttribute?.('data-gate');
+  const action = event.target.closest?.('[data-gate]')?.getAttribute('data-gate');
   if (action === 'confirm') {
-    gate.hidden = true;
+    closeGate();
     setNsfw(true);
   } else if (action === 'cancel' || event.target === gate) {
-    gate.hidden = true;
+    closeGate();
   }
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && gate.classList.contains('is-open')) closeGate();
 });
 
 /* ------------------------------ routing ----------------------------- */
