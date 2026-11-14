@@ -1,0 +1,31 @@
+{
+  "name": "denji-api",
+  "version": "1.0.0",
+  "description": "Denji API — API REST publica, gratuita y sin API keys. Anime, descargas, busquedas, herramientas e IA.",
+  "type": "module",
+  "main": "server.js",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "keywords": [
+    "api",
+    "rest",
+    "anime",
+    "downloader",
+    "denji"
+  ],
+  "dependencies": {
+    "cheerio": "^1.2.0",
+    "emoji-mixer": "^2.2.1",
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.3.2"
+  }
+}

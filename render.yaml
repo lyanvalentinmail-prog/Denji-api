@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: denji-api
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: npm ci || npm install
+    startCommand: npm start
+    healthCheckPath: /api/status
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 22.11.0
+      - key: NODE_ENV
+        value: production
+      # Claves opcionales. sync: false las deja vacias en el dashboard para que las completes.
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: STABILITY_API_KEY
+        sync: false
+      - key: IMAGEN_API_KEY
+        sync: false
+      - key: SPOTIFY_CLIENT_ID
+        sync: false
+      - key: SPOTIFY_CLIENT_SECRET
+        sync: false
+      - key: RULE34_USER_ID
+        sync: false
+      - key: RULE34_API_KEY
+        sync: false
+      - key: RATE_LIMIT_MAX
+        value: '180'
+      # Ponlo en 1 para deshabilitar por completo los endpoints NSFW en este servidor.
+      - key: NSFW_DISABLED
+        sync: false
