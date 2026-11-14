@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { rateLimit } from './core/ratelimit.js';
-import { nsfwGate, nsfwRequested, nsfwHardDisabled, NSFW_HEADER } from './core/nsfw.js';
+import { nsfwRequested, nsfwHardDisabled, NSFW_HEADER } from './core/nsfw.js';
 import { BRAND, fail } from './core/respond.js';
 import { listCategories, listEndpoints, listSubcategories, stats } from './core/registry.js';
 
@@ -114,8 +114,9 @@ export function createApp() {
     routes.nsfw,
   ];
   for (const registrar of registrars) {
-    if (registrar.category.nsfw) app.use(registrar.category.path, nsfwGate, registrar.router);
-    else app.use(registrar.category.path, registrar.router);
+    // Cada categoria se monta en su ruta. La puerta NSFW vive dentro de su propio
+    // router para no interceptar la pagina web de la categoria.
+    app.use(registrar.category.path, registrar.router);
   }
 
   /* ----------------------------- Web -------------------------------- */

@@ -57,6 +57,8 @@ export function defineCategory(meta) {
 
 function createRegistrar(category) {
   const router = Router();
+  /** Middlewares que se aplican a cada endpoint registrado despues del use(). */
+  const guards = [];
 
   const register = (method, route, meta, handler) => {
     const path = `${category.path}${route}`;
@@ -76,7 +78,9 @@ function createRegistrar(category) {
       requiresNsfw: category.nsfw || meta.nsfw || false,
     };
     endpoints.push(entry);
-    router[method](route, async (req, res, next) => {
+    // Los guards van por endpoint, no con router.use(): asi la ruta raiz de la
+    // categoria queda libre para servir la pagina web.
+    router[method](route, ...guards, async (req, res, next) => {
       try {
         await handler(req, res, next);
       } catch (err) {
@@ -89,6 +93,10 @@ function createRegistrar(category) {
   return {
     category,
     router,
+    /** Aplica un middleware a todos los endpoints registrados a partir de aqui. */
+    use: (middleware) => {
+      guards.push(middleware);
+    },
     get: (route, meta, handler) => register('get', route, meta, handler),
     post: (route, meta, handler) => register('post', route, meta, handler),
     /** Registra la misma ruta para GET y POST (util en los endpoints de IA). */

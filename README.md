@@ -265,7 +265,7 @@ de la implementacion. Agregar un endpoint es agregar una funcion.
 npm test
 ```
 
-23 tests con `node:test` + `supertest`. Cubren:
+24 tests con `node:test` + `supertest`. Cubren:
 
 - evaluador de expresiones (precedencia, potencias, funciones, entrada peligrosa)
 - Morse en ambas direcciones
@@ -273,6 +273,7 @@ npm test
 - web servida en `/`, `/home` y cada categoria
 - interruptor NSFW: apagado por defecto, activo por query y por cabecera, y `NSFW_DISABLED`
 - sobres de error: `400`, `404`, `503`
+- que `/nsfw` sirva la web mientras sus endpoints siguen bloqueados
 - **barrido de las 102 rutas registradas**: ninguna devuelve `404` ni `500`
 
 > Los endpoints que llaman a proveedores externos devuelven `502 UPSTREAM_ERROR` cuando se

@@ -5,6 +5,7 @@ import { randomPost, subredditPosts } from '../providers/reddit.js';
 import { rule34Search, rule34Random } from '../providers/rule34.js';
 import { upstream } from '../core/errors.js';
 import { getJson } from '../core/http.js';
+import { nsfwGate } from '../core/nsfw.js';
 
 export const nsfw = defineCategory({
   id: 'nsfw',
@@ -16,6 +17,13 @@ export const nsfw = defineCategory({
   description: 'Contenido para adultos. Bloqueado por defecto: requiere activar el interruptor y confirmar la mayoria de edad.',
   note: 'Bloqueado por defecto · +18',
 });
+
+/**
+ * La puerta va DENTRO del router, no montada sobre la ruta: asi `/nsfw` sigue
+ * sirviendo la web (que muestra el panel bloqueado) y solo se protegen los
+ * endpoints reales.
+ */
+nsfw.use(nsfwGate);
 
 /** Un solo post, con varios proveedores en cascada. */
 async function singlePost(subreddits) {

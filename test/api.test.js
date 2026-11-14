@@ -205,6 +205,15 @@ test('los endpoints NSFW responden 403 sin el interruptor', async () => {
   }
 });
 
+test('la pagina web /nsfw se sirve aunque los endpoints esten bloqueados', async () => {
+  // Regresion: la puerta montada sobre toda la ruta devolvia 403 JSON
+  // y el panel "bloqueado" de la web era inalcanzable.
+  const res = await request(app).get('/nsfw');
+  assert.equal(res.status, 200, 'GET /nsfw debe servir la web, no un 403');
+  assert.match(res.headers['content-type'], /text\/html/);
+  assert.match(res.text, /id="nsfw-toggle"/);
+});
+
 test('el interruptor se acepta por query y por cabecera', async () => {
   const byQuery = await request(app).get('/nsfw/tetas?nsfw=1');
   const byHeader = await request(app).get('/nsfw/tetas').set('x-denji-nsfw', '1');
