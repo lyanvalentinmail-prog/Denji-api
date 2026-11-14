@@ -1,0 +1,16 @@
+node_modules/
+.env
+.env.local
+.env.*.local
+.vercel
+npm-debug.log*
+yarn-error.log*
+.DS_Store
+*.log
+coverage/
+dist/
+.idea/
+.vscode/
+
+# Catalogo generado (se sube a Drive, no se versiona)
+DENJI-API-ENDPOINTS.md
